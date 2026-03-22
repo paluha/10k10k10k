@@ -6,119 +6,119 @@ import styles from '../page.module.css';
 /* ── Данные квиза ── */
 const STEPS = [
   {
-    label: 'КРОК 1 — ВАШ ПРОЄКТ',
-    title: 'Яка у вас ніша?',
+    label: 'ШАГ 1 — ВАШ ПРОЕКТ',
+    title: 'Какая у вас ниша?',
     options: [
-      { emoji: '🛍️', text: 'eCommerce / товарний бізнес' },
-      { emoji: '🎓', text: 'Інфобізнес / онлайн-курси' },
-      { emoji: '💼', text: 'Послуги (медицина, краса, юристи)' },
-      { emoji: '🏠', text: 'Нерухомість / авто' },
-      { emoji: '💰', text: 'Фінанси / крипта / інвестиції' },
-      { emoji: '🍕', text: 'Їжа та напої / доставка' },
+      { emoji: '🛍️', text: 'eCommerce / товарный бизнес' },
+      { emoji: '🎓', text: 'Инфобизнес / онлайн-курсы' },
+      { emoji: '💼', text: 'Услуги (медицина, красота, юристы)' },
+      { emoji: '🏠', text: 'Недвижимость / авто' },
+      { emoji: '💰', text: 'Финансы / крипта / инвестиции' },
+      { emoji: '🍕', text: 'Еда и напитки / доставка' },
     ],
   },
   {
-    label: 'КРОК 2 — ПОТОЧНА СИТУАЦІЯ',
-    title: 'Яка зараз ситуація з трафіком?',
+    label: 'ШАГ 2 — ТЕКУЩАЯ СИТУАЦИЯ',
+    title: 'Какая сейчас ситуация с трафиком?',
     options: [
-      { emoji: '🚫', text: 'Реклами ще немає', sub: 'Тільки починаємо' },
-      { emoji: '📉', text: 'Реклама є, але не окупається', sub: 'Зливаємо бюджет без результату' },
-      { emoji: '📊', text: 'Є результат, хочемо масштаб', sub: 'Реклама працює, але повільно' },
-      { emoji: '🔄', text: 'Хочу змінити підрядника', sub: 'Поточний таргетолог не дає результату' },
+      { emoji: '🚫', text: 'Рекламы ещё нет', sub: 'Только начинаем' },
+      { emoji: '📉', text: 'Реклама есть, но не окупается', sub: 'Сливаем бюджет без результата' },
+      { emoji: '📊', text: 'Есть результат, хотим масштаб', sub: 'Реклама работает, но медленно' },
+      { emoji: '🔄', text: 'Хочу сменить подрядчика', sub: 'Текущий таргетолог не даёт результата' },
     ],
   },
   {
-    label: 'КРОК 3 — БЮДЖЕТ',
-    title: 'Який рекламний бюджет плануєте?',
+    label: 'ШАГ 3 — БЮДЖЕТ',
+    title: 'Какой рекламный бюджет планируете?',
     options: [
-      { emoji: '💵', text: 'До $500/міс' },
-      { emoji: '💸', text: '$500 — $2,000/міс' },
-      { emoji: '💰', text: '$2,000 — $5,000/міс' },
-      { emoji: '🚀', text: '$5,000+/міс' },
+      { emoji: '💵', text: 'До $500/мес' },
+      { emoji: '💸', text: '$500 — $2,000/мес' },
+      { emoji: '💰', text: '$2,000 — $5,000/мес' },
+      { emoji: '🚀', text: '$5,000+/мес' },
     ],
   },
   {
-    label: 'КРОК 4 — КАНАЛ',
-    title: 'Де плануєте запускати рекламу?',
+    label: 'ШАГ 4 — КАНАЛ',
+    title: 'Где планируете запускать рекламу?',
     options: [
       { emoji: '📘', text: 'Facebook / Instagram' },
       { emoji: '🎵', text: 'TikTok Ads' },
-      { emoji: '🔍', text: 'Google / SEO', sub: 'Пошук + контекстна реклама' },
-      { emoji: '⚡', text: 'Хочу комплексно', sub: 'Кілька каналів одразу' },
+      { emoji: '🔍', text: 'Google / SEO', sub: 'Поиск + контекстная реклама' },
+      { emoji: '⚡', text: 'Хочу комплексно', sub: 'Несколько каналов сразу' },
     ],
   },
   {
-    label: 'КРОК 5 — ЦІЛЬ',
-    title: 'Яка головна ціль на найближчий місяць?',
+    label: 'ШАГ 5 — ЦЕЛЬ',
+    title: 'Какая главная цель на ближайший месяц?',
     options: [
-      { emoji: '🎯', text: 'Отримати перші заявки' },
-      { emoji: '📉', text: 'Знизити вартість ліда' },
-      { emoji: '🔥', text: 'Масштабувати те, що вже працює' },
-      { emoji: '🌍', text: 'Вийти на Європу', sub: 'Нові ринки та аудиторії' },
+      { emoji: '🎯', text: 'Получить первые заявки' },
+      { emoji: '📉', text: 'Снизить стоимость лида' },
+      { emoji: '🔥', text: 'Масштабировать то, что уже работает' },
+      { emoji: '🌍', text: 'Выйти на Европу', sub: 'Новые рынки и аудитории' },
     ],
   },
 ];
 
-/* ── Кейси ── */
+/* ── Кейсы ── */
 const CASES = [
   {
     name: 'Fire Sushi',
-    niche: 'Доставка їжі',
-    task: 'Залучити перших клієнтів до нового сервісу доставки суші',
+    niche: 'Доставка еды',
+    task: 'Привлечь первых клиентов в новый сервис доставки суши',
     stats: [
-      { value: '1,718', label: 'Продажів' },
-      { value: '$1.21', label: 'Ціна продажу' },
+      { value: '1,718', label: 'Продаж' },
+      { value: '$1.21', label: 'Цена продажи' },
       { value: '823%', label: 'ROI' },
     ],
   },
   {
     name: 'LeoLing',
-    niche: 'Мовна школа',
-    task: 'Індивідуальні уроки та набір на групові курси — редизайн сайту + воронка',
+    niche: 'Языковая школа',
+    task: 'Индивидуальные уроки и набор на групповые курсы — редизайн сайта + воронка',
     stats: [
-      { value: '1,009', label: 'Лідів' },
-      { value: '$3.25', label: 'Ціна ліда' },
-      { value: '23%', label: 'Конверсія' },
+      { value: '1,009', label: 'Лидов' },
+      { value: '$3.25', label: 'Цена лида' },
+      { value: '23%', label: 'Конверсия' },
     ],
   },
   {
     name: 'YourCountry',
-    niche: 'Працевлаштування',
-    task: 'Вихід на європейський ринок зі стабільним потоком заявок',
+    niche: 'Трудоустройство',
+    task: 'Выход на европейский рынок со стабильным потоком заявок',
     stats: [
-      { value: '3,345', label: 'Лідів' },
-      { value: '$1.23', label: 'Ціна ліда' },
+      { value: '3,345', label: 'Лидов' },
+      { value: '$1.23', label: 'Цена лида' },
       { value: '2,339%', label: 'ROI' },
     ],
   },
   {
     name: 'Gentlemen',
-    niche: 'Бренд одягу',
-    task: 'Знизити ціну ліда та збільшити щомісячний обсяг продажів',
+    niche: 'Бренд одежды',
+    task: 'Снизить цену лида и увеличить ежемесячный объём продаж',
     stats: [
       { value: '3.7%', label: 'CTR' },
-      { value: '11.2%', label: 'Конверсія' },
-      { value: '$1.20', label: 'Ціна ліда' },
+      { value: '11.2%', label: 'Конверсия' },
+      { value: '$1.20', label: 'Цена лида' },
     ],
   },
   {
     name: 'Ocean Sushi',
-    niche: 'Доставка їжі',
-    task: 'Збільшити кількість покупок та побудувати лояльність',
+    niche: 'Доставка еды',
+    task: 'Увеличить количество покупок и построить лояльность',
     stats: [
-      { value: '$28.5K', label: 'Дохід' },
-      { value: '$1.26', label: 'Ціна продажу' },
+      { value: '$28.5K', label: 'Доход' },
+      { value: '$1.26', label: 'Цена продажи' },
       { value: '2,599%', label: 'ROAS' },
     ],
   },
   {
     name: 'EnglishWise',
-    niche: 'Школа англійської',
-    task: 'Стабільний потік лідів зі збереженням преміум-позиціонування',
+    niche: 'Школа английского',
+    task: 'Стабильный поток лидов с сохранением премиум-позиционирования',
     stats: [
-      { value: '287', label: 'Лідів' },
-      { value: '$3.20', label: 'Ціна ліда' },
-      { value: '62%', label: 'Кваліфіков.' },
+      { value: '287', label: 'Лидов' },
+      { value: '$3.20', label: 'Цена лида' },
+      { value: '62%', label: 'Квалифиц.' },
     ],
   },
 ];
@@ -190,9 +190,9 @@ export default function HomeRu() {
         <div className={styles.navInner}>
           <span className={styles.logo}>10K<span className={styles.logoAccent}>Traffic</span></span>
           <div className={styles.navLinks}>
-            <a href="#cases">Кейси</a>
-            <a href="#about">Про нас</a>
-            <button className={styles.navCta} onClick={openQuiz}>Отримати оффер</button>
+            <a href="#cases">Кейсы</a>
+            <a href="#about">О нас</a>
+            <button className={styles.navCta} onClick={openQuiz}>Получить оффер</button>
           </div>
         </div>
       </nav>
@@ -203,42 +203,42 @@ export default function HomeRu() {
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>Агентство Meta Ads</div>
           <h1 className={styles.heroTitle}>
-            Масштабуємо потік клієнтів <span className={styles.heroHighlight}>x3</span> без втрати рентабельності
+            Масштабируем поток клиентов <span className={styles.heroHighlight}>x3</span> без потери рентабельности
           </h1>
           <p className={styles.heroSub}>
-            Ми приносимо продажі, а не кліки. Перевірені результати у 50+ бізнесів.
+            Мы приносим продажи, а не клики. Проверенные результаты у 50+ бизнесов.
           </p>
           <button className={styles.heroCta} onClick={openQuiz}>
-            Безкоштовна стратегічна консультація
+            Бесплатная стратегическая консультация
           </button>
           <div className={styles.heroStats}>
             <div className={styles.heroStat}>
               <span className={styles.heroStatNum}>50+</span>
-              <span className={styles.heroStatLabel}>Проєктів</span>
+              <span className={styles.heroStatLabel}>Проектов</span>
             </div>
             <div className={styles.heroStat}>
               <span className={styles.heroStatNum}>$2M+</span>
-              <span className={styles.heroStatLabel}>Рекламного бюджету</span>
+              <span className={styles.heroStatLabel}>Рекламного бюджета</span>
             </div>
             <div className={styles.heroStat}>
               <span className={styles.heroStatNum}>800%+</span>
-              <span className={styles.heroStatLabel}>Середній ROI</span>
+              <span className={styles.heroStatLabel}>Средний ROI</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── ЧОМУ МИ ── */}
+      {/* ── ПОЧЕМУ МЫ ── */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Чому бізнеси обирають нас</h2>
+        <h2 className={styles.sectionTitle}>Почему бизнесы выбирают нас</h2>
         <div className={styles.benefitsGrid}>
           {[
-            { icon: '📊', title: 'Фокус на ROI', desc: 'Оптимізуємо під дохід, а не vanity-метрики. Кожен долар під контролем.' },
-            { icon: '🎯', title: 'Перевірені воронки', desc: 'Бойові рекламні воронки, які перетворюють холодний трафік у покупців.' },
-            { icon: '⚡', title: 'Швидкий запуск', desc: 'Кампанії запускаються за 48 годин. Ніяких місяців "підготовки".' },
-            { icon: '🔬', title: 'A/B тестування', desc: '100+ варіацій креативів на кампанію. Знаходимо те, що працює.' },
-            { icon: '📱', title: 'Експерти Meta', desc: 'Facebook та Instagram реклама — наша спеціалізація. Глибоке знання платформ.' },
-            { icon: '💬', title: 'Прозорість', desc: 'Щотижневі звіти, дашборди в реальному часі. Ви бачите, куди йдуть гроші.' },
+            { icon: '📊', title: 'Фокус на ROI', desc: 'Оптимизируем под доход, а не vanity-метрики. Каждый доллар под контролем.' },
+            { icon: '🎯', title: 'Проверенные воронки', desc: 'Боевые рекламные воронки, которые превращают холодный трафик в покупателей.' },
+            { icon: '⚡', title: 'Быстрый запуск', desc: 'Кампании запускаются за 48 часов. Никаких месяцев "подготовки".' },
+            { icon: '🔬', title: 'A/B тестирование', desc: '100+ вариаций креативов на кампанию. Находим то, что работает.' },
+            { icon: '📱', title: 'Эксперты Meta', desc: 'Facebook и Instagram реклама — наша специализация. Глубокое знание платформ.' },
+            { icon: '💬', title: 'Прозрачность', desc: 'Еженедельные отчёты, дашборды в реальном времени. Вы видите, куда идут деньги.' },
           ].map((b, i) => (
             <div key={i} className={styles.benefitCard}>
               <span className={styles.benefitIcon}>{b.icon}</span>
@@ -249,10 +249,10 @@ export default function HomeRu() {
         </div>
       </section>
 
-      {/* ── КЕЙСИ ── */}
+      {/* ── КЕЙСЫ ── */}
       <section id="cases" className={styles.section}>
-        <h2 className={styles.sectionTitle}>Кейси</h2>
-        <p className={styles.sectionSub}>Реальні результати реальних бізнесів</p>
+        <h2 className={styles.sectionTitle}>Кейсы</h2>
+        <p className={styles.sectionSub}>Реальные результаты реальных бизнесов</p>
         <div className={styles.casesGrid}>
           {CASES.map((c, i) => (
             <div key={i} className={styles.caseCard}>
@@ -276,16 +276,16 @@ export default function HomeRu() {
 
       {/* ── CTA БАННЕР ── */}
       <section className={styles.ctaBanner}>
-        <h2 className={styles.ctaBannerTitle}>Готові масштабувати результати?</h2>
-        <p className={styles.ctaBannerSub}>Пройдіть 60-секундний квіз і отримайте персональну стратегію для вашого бізнесу</p>
-        <button className={styles.heroCta} onClick={openQuiz}>Почати квіз</button>
+        <h2 className={styles.ctaBannerTitle}>Готовы масштабировать результаты?</h2>
+        <p className={styles.ctaBannerSub}>Пройдите 60-секундный квиз и получите персональную стратегию для вашего бизнеса</p>
+        <button className={styles.heroCta} onClick={openQuiz}>Начать квиз</button>
       </section>
 
-      {/* ── КВІЗ ── */}
+      {/* ── КВИЗ ── */}
       {quizOpen && (
         <section ref={quizRef} id="quiz" className={styles.quizSection}>
           <div className={styles.quizProgress}>
-            <span className={styles.quizStepLabel}>КРОК {step + 1} з {totalSteps}</span>
+            <span className={styles.quizStepLabel}>ШАГ {step + 1} из {totalSteps}</span>
             <div className={styles.quizProgressBar}>
               <div className={styles.quizProgressFill} style={{ width: `${progress}%` }} />
             </div>
@@ -295,9 +295,9 @@ export default function HomeRu() {
             {submitted ? (
               <div className={styles.quizThankYou}>
                 <span className={styles.quizThankYouIcon}>🎉</span>
-                <h2 className={styles.quizThankYouTitle}>Дякуємо!</h2>
+                <h2 className={styles.quizThankYouTitle}>Спасибо!</h2>
                 <p className={styles.quizThankYouSub}>
-                  Ми зв&apos;яжемось з вами протягом 15 хвилин з персональною стратегією.
+                  Мы свяжемся с вами в течение 15 минут с персональной стратегией.
                 </p>
               </div>
             ) : step < STEPS.length ? (
@@ -327,7 +327,7 @@ export default function HomeRu() {
                   onClick={nextStep}
                   disabled={answers[step] === undefined}
                 >
-                  Далі →
+                  Далее →
                 </button>
                 {step > 0 && (
                   <button className={styles.quizBack} onClick={prevStep}>
@@ -337,26 +337,26 @@ export default function HomeRu() {
               </>
             ) : (
               <>
-                <span className={styles.quizLabel}>КРОК 6 — ВАШІ КОНТАКТИ</span>
+                <span className={styles.quizLabel}>ШАГ 6 — ВАШИ КОНТАКТЫ</span>
                 <h2 className={styles.quizTitle}>
-                  Залишіть контакти — і ми зв&apos;яжемось протягом 15 хвилин
+                  Оставьте контакты — и мы свяжемся в течение 15 минут
                 </h2>
                 <div className={styles.quizForm}>
                   <input
                     className={styles.quizInput}
-                    placeholder="Ваше ім'я"
+                    placeholder="Ваше имя"
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                   />
                   <input
                     className={styles.quizInput}
-                    placeholder="+380 / +49..."
+                    placeholder="+7 / +380 / +49..."
                     value={contactForm.phone}
                     onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                   />
                   <input
                     className={styles.quizInput}
-                    placeholder="Telegram @нікнейм (необов'язково)"
+                    placeholder="Telegram @ник (необязательно)"
                     value={contactForm.telegram}
                     onChange={(e) => setContactForm({ ...contactForm, telegram: e.target.value })}
                   />
@@ -365,16 +365,16 @@ export default function HomeRu() {
                     onClick={handleSubmit}
                     disabled={!contactForm.name || !contactForm.phone}
                   >
-                    Записатись на консультацію 🔥
+                    Записаться на консультацию 🔥
                   </button>
                 </div>
                 <button className={styles.quizBack} onClick={prevStep}>
                   ← Назад
                 </button>
                 <div className={styles.quizTrust}>
-                  <span>🔒 Конфіденційно</span>
-                  <span>⚡ Відповідь за 15 хв</span>
-                  <span>🎁 Консультація безкоштовна</span>
+                  <span>🔒 Конфиденциально</span>
+                  <span>⚡ Ответ за 15 мин</span>
+                  <span>🎁 Консультация бесплатна</span>
                 </div>
               </>
             )}
@@ -382,19 +382,19 @@ export default function HomeRu() {
         </section>
       )}
 
-      {/* ── ПРО НАС ── */}
+      {/* ── О НАС ── */}
       <section id="about" className={styles.section}>
-        <h2 className={styles.sectionTitle}>Про 10K Traffic</h2>
+        <h2 className={styles.sectionTitle}>О 10K Traffic</h2>
         <div className={styles.aboutContent}>
           <p>
-            Ми — агентство перформанс-маркетингу, що спеціалізується на рекламі в Meta (Facebook та Instagram).
-            Наша команда керувала рекламними бюджетами на суму понад $2M у 50+ бізнесів у сферах eCommerce,
-            послуг, освіти, нерухомості та доставки їжі.
+            Мы — агентство перформанс-маркетинга, специализирующееся на рекламе в Meta (Facebook и Instagram).
+            Наша команда управляла рекламными бюджетами на сумму более $2M у 50+ бизнесов в сферах eCommerce,
+            услуг, образования, недвижимости и доставки еды.
           </p>
           <p>
-            Ми не просто запускаємо рекламу — ми будуємо повноцінні системи залучення клієнтів: від креативної
-            стратегії та дизайну воронок до оптимізації конверсій та масштабування. Кожна кампанія підкріплена
-            даними, протестована 100+ варіаціями креативів та оптимізується щотижня.
+            Мы не просто запускаем рекламу — мы строим полноценные системы привлечения клиентов: от креативной
+            стратегии и дизайна воронок до оптимизации конверсий и масштабирования. Каждая кампания подкреплена
+            данными, протестирована 100+ вариациями креативов и оптимизируется еженедельно.
           </p>
         </div>
       </section>
@@ -404,11 +404,11 @@ export default function HomeRu() {
         <div className={styles.footerInner}>
           <span className={styles.logo}>10K<span className={styles.logoAccent}>Traffic</span></span>
           <div className={styles.footerLinks}>
-            <a href="#cases">Кейси</a>
-            <a href="#about">Про нас</a>
-            <button className={styles.footerCta} onClick={openQuiz}>Отримати оффер</button>
+            <a href="#cases">Кейсы</a>
+            <a href="#about">О нас</a>
+            <button className={styles.footerCta} onClick={openQuiz}>Получить оффер</button>
           </div>
-          <p className={styles.footerCopy}>© {new Date().getFullYear()} 10K Traffic. Всі права захищені.</p>
+          <p className={styles.footerCopy}>© {new Date().getFullYear()} 10K Traffic. Все права защищены.</p>
         </div>
       </footer>
     </div>
