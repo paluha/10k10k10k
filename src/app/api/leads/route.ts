@@ -28,6 +28,39 @@ export async function POST(request: Request) {
 
     await fs.writeFile(leadsFile, JSON.stringify(leads, null, 2));
 
+    // Telegram notification
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (botToken && chatId) {
+      const answers = body.answers || [];
+      const contact = body.contact || {};
+      const lang = body.lang || 'en';
+      const lines = [
+        `🔥 *New Lead — 10K Traffic*`,
+        ``,
+        ...answers.map((a: { question: string; answer: string }) => `*${a.question}*\n${a.answer}`),
+        ``,
+        `👤 *${contact.name || '—'}*`,
+        `📞 ${contact.phone || '—'}`,
+        ...(contact.telegram ? [`✈️ ${contact.telegram}`] : []),
+        ...(lang !== 'en' ? [`🌐 ${lang.toUpperCase()}`] : []),
+        ...(body.source ? [`📎 ${body.source}`] : []),
+      ];
+      try {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: lines.join('\n'),
+            parse_mode: 'Markdown',
+          }),
+        });
+      } catch (e) {
+        console.error('Telegram notification failed:', e);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Failed to save lead' }, { status: 500 });
