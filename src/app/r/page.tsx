@@ -344,13 +344,16 @@ export default function HomeRu() {
                 <div className={styles.quizForm}>
                   <input
                     className={styles.quizInput}
-                    placeholder="Ваше имя"
+                    placeholder="Ваше имя *"
+                    required
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                   />
                   <input
                     className={styles.quizInput}
-                    placeholder="+7 / +380 / +49..."
+                    placeholder="Номер телефона *"
+                    required
+                    type="tel"
                     value={contactForm.phone}
                     onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                   />

@@ -347,13 +347,16 @@ export default function Home() {
                 <div className={styles.quizForm}>
                   <input
                     className={styles.quizInput}
-                    placeholder="Your name"
+                    placeholder="Your name *"
+                    required
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                   />
                   <input
                     className={styles.quizInput}
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="Phone number *"
+                    required
+                    type="tel"
                     value={contactForm.phone}
                     onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                   />
