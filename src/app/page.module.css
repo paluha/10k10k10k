@@ -562,7 +562,7 @@
     align-items: center;
   }
   .benefitsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
   .casesGrid {
     grid-template-columns: 1fr;
