@@ -3,6 +3,13 @@
 import { useState, useRef } from 'react';
 import styles from '../page.module.css';
 
+/* ── Helper: fire FB pixel events ── */
+const fbEvent = (event: string, data?: Record<string, unknown>) => {
+  if (typeof window !== 'undefined' && typeof (window as unknown as Record<string, unknown>).fbq === 'function') {
+    (window as unknown as { fbq: (type: string, event: string, data?: Record<string, unknown>) => void }).fbq('track', event, data);
+  }
+};
+
 /* ── Данные квиза ── */
 const STEPS = [
   {
@@ -183,6 +190,7 @@ export default function HomeRu() {
     setStep(0);
     setAnswers({});
     setSubmitted(false);
+    fbEvent('ViewContent', { content_name: 'quiz_opened' });
     setTimeout(() => quizRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
   };
 
@@ -192,6 +200,7 @@ export default function HomeRu() {
 
   const nextStep = () => {
     if (answers[step] === undefined) return;
+    fbEvent('ViewContent', { content_name: `quiz_step_${step + 2}` });
     setStep(step + 1);
   };
 
@@ -202,6 +211,8 @@ export default function HomeRu() {
   const handleSubmit = async () => {
     if (!contactForm.name || !contactForm.phone) return;
 
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+
     const payload = {
       answers: Object.entries(answers).map(([stepIdx, optIdx]) => ({
         question: STEPS[Number(stepIdx)]?.title,
@@ -210,7 +221,15 @@ export default function HomeRu() {
       contact: contactForm,
       lang: 'ru',
       timestamp: new Date().toISOString(),
-      source: typeof window !== 'undefined' ? window.location.search : '',
+      source: typeof window !== 'undefined' ? window.location.pathname : '',
+      utm: {
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        utm_term: params.get('utm_term') || '',
+        fbclid: params.get('fbclid') || '',
+      },
     };
 
     try {
@@ -223,6 +242,7 @@ export default function HomeRu() {
       // silent fail
     }
 
+    fbEvent('Lead', { content_name: 'quiz_completed' });
     setSubmitted(true);
   };
 
@@ -465,6 +485,28 @@ export default function HomeRu() {
                   >
                     Получить стратегию бесплатно 🔥
                   </button>
+                  <a
+                    href="https://wa.me/19293800274?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D1%80%D0%BE%D0%B1%D0%BD%D0%B5%D0%B5%20%D0%BE%20%D0%B2%D0%B0%D1%88%D0%B8%D1%85%20%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B0%D1%85"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      padding: '14px',
+                      borderRadius: '12px',
+                      background: 'rgba(37, 211, 102, 0.08)',
+                      border: '1px solid rgba(37, 211, 102, 0.2)',
+                      color: '#25D366',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    💬 Или напишите нам в WhatsApp
+                  </a>
                 </div>
                 <button className={styles.quizBack} onClick={prevStep}>
                   ← Назад

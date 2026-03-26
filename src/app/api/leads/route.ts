@@ -13,6 +13,8 @@ export async function POST(request: Request) {
       const answers = body.answers || [];
       const contact = body.contact || {};
       const lang = body.lang || 'en';
+      const utm = body.utm || {};
+      const utmParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
       const lines = [
         `🔥 *New Lead — 10K Traffic*`,
         ``,
@@ -22,7 +24,9 @@ export async function POST(request: Request) {
         `📞 ${contact.phone || '—'}`,
         ...(contact.telegram ? [`✈️ ${contact.telegram}`] : []),
         ...(lang !== 'en' ? [`🌐 ${lang.toUpperCase()}`] : []),
-        ...(body.source ? [`📎 ${body.source}`] : []),
+        ...(body.source ? [`📍 ${body.source}`] : []),
+        ...(utmParts.length > 0 ? [`📎 ${utmParts.join(' / ')}`] : []),
+        ...(utm.fbclid ? [`🔗 fbclid: ${utm.fbclid.substring(0, 20)}...`] : []),
       ];
       try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
