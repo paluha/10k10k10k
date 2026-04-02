@@ -95,23 +95,27 @@ export function useScrollCounter(end: number, duration = 2000) {
 
 /* ── Social proof toast ── */
 const SOCIAL_PROOF_RU = [
-  { name: 'Анна', city: 'Киев', action: 'получила стратегию' },
-  { name: 'Дмитрий', city: 'Москва', action: 'запустил рекламу' },
-  { name: 'Марина', city: 'Варшава', action: 'получила первые заявки' },
-  { name: 'Алексей', city: 'Берлин', action: 'масштабировал x3' },
-  { name: 'Ольга', city: 'Прага', action: 'снизила цену лида' },
-  { name: 'Игорь', city: 'Тбилиси', action: 'получил стратегию' },
-  { name: 'Светлана', city: 'Рига', action: 'запустила рекламу' },
+  { name: 'Анна', city: 'Нью-Йорк', action: 'начала работу — eCommerce' },
+  { name: 'Дмитрий', city: 'Майами', action: 'взял бесплатную стратегию — услуги' },
+  { name: 'Марина', city: 'Чикаго', action: 'начала работу — онлайн-образование' },
+  { name: 'Алексей', city: 'Лос-Анджелес', action: 'взял бесплатную стратегию — недвижимость' },
+  { name: 'Ольга', city: 'Хьюстон', action: 'начала работу — доставка еды' },
+  { name: 'Игорь', city: 'Бостон', action: 'взял бесплатную стратегию — финансы' },
+  { name: 'Светлана', city: 'Сиэтл', action: 'начала работу — красота' },
+  { name: 'Максим', city: 'Даллас', action: 'взял бесплатную стратегию — eCommerce' },
+  { name: 'Екатерина', city: 'Сан-Франциско', action: 'начала работу — услуги' },
 ];
 
 const SOCIAL_PROOF_EN = [
-  { name: 'Sarah', city: 'New York', action: 'got her strategy' },
-  { name: 'James', city: 'London', action: 'launched ads' },
-  { name: 'Maria', city: 'Toronto', action: 'got first leads' },
-  { name: 'David', city: 'Miami', action: 'scaled x3' },
-  { name: 'Emily', city: 'Chicago', action: 'lowered CPL' },
-  { name: 'Michael', city: 'LA', action: 'got his strategy' },
-  { name: 'Lisa', city: 'Austin', action: 'launched campaigns' },
+  { name: 'Sarah', city: 'New York', action: 'started working — eCommerce' },
+  { name: 'James', city: 'Miami', action: 'got free strategy — services' },
+  { name: 'Maria', city: 'Chicago', action: 'started working — education' },
+  { name: 'David', city: 'Los Angeles', action: 'got free strategy — real estate' },
+  { name: 'Emily', city: 'Houston', action: 'started working — food delivery' },
+  { name: 'Michael', city: 'Boston', action: 'got free strategy — finance' },
+  { name: 'Lisa', city: 'Seattle', action: 'started working — beauty' },
+  { name: 'Chris', city: 'Dallas', action: 'got free strategy — eCommerce' },
+  { name: 'Jessica', city: 'San Francisco', action: 'started working — services' },
 ];
 
 export function useSocialProof(lang: 'ru' | 'en' = 'en') {
