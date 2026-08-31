@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── CRM: лиды с квиза 10K Traffic ───────────────────────────────────
+
+enum LeadStatus {
+  NEW        // упал с квиза
+  CONTACTED  // связались
+  INTERESTED // интересно, думает
+  SOLD       // купил трафик — платит weeklyFee в неделю
+  LOST       // отказ / пропал
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+
+  name      String
+  phone     String?
+  telegram  String?
+  lang      String     @default("en")
+
+  // Ниша/кампания: берётся из utm_campaign, можно править руками
+  niche     String     @default("no-campaign")
+  source    String?    // pathname лендинга: / | /r | /r/s
+  utm       Json?      // все utm-метки + fbclid как пришли
+  answers   Json?      // ответы квиза [{question, answer}]
+
+  status    LeadStatus @default(NEW)
+  note      String?    @db.Text
+
+  // Экономика: SOLD-лид = клиент, платит weeklyFee в неделю
+  weeklyFee Int        @default(150)
+  soldAt    DateTime?  // когда купил
+  churnedAt DateTime?  // когда отвалился (null = платит до сих пор)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([niche, createdAt(sort: Desc)])
+}
+
+// Расход на рекламу: одна цифра на нишу в неделю, вводится руками
+model AdSpend {
+  id        String   @id @default(cuid())
+  niche     String
+  weekStart DateTime // понедельник недели (UTC, 00:00)
+  amount    Float    @default(0)
+
+  @@unique([niche, weekStart])
+}
