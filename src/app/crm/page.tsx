@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { isAuthed } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Board } from './Board';
-import type { LeadDTO, QA } from './types';
+import type { LeadDTO, LeadStatus, QA } from './types';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +27,7 @@ export default async function CrmPage() {
     source: l.source,
     utm: (l.utm as Record<string, string> | null) ?? null,
     answers: (l.answers as QA[] | null) ?? null,
-    status: l.status,
+    status: l.status as LeadStatus,
     note: l.note,
     weeklyFee: l.weeklyFee,
     soldAt: l.soldAt?.toISOString() ?? null,

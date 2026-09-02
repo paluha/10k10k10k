@@ -13,6 +13,9 @@ export function CrmNav() {
       <Link href="/crm" className={pathname === '/crm' ? 'active' : ''}>
         Доска
       </Link>
+      <Link href="/crm/clients" className={pathname === '/crm/clients' ? 'active' : ''}>
+        Клиенты
+      </Link>
       <Link href="/crm/analytics" className={pathname === '/crm/analytics' ? 'active' : ''}>
         Аналитика
       </Link>

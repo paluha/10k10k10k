@@ -4,11 +4,14 @@ import { useState } from 'react';
 import type { LeadDTO, LeadStatus, PaymentDTO } from './types';
 
 const COLUMNS: { key: LeadStatus; title: string }[] = [
-  { key: 'NEW', title: 'Новые' },
-  { key: 'CONTACTED', title: 'Связались' },
-  { key: 'INTERESTED', title: 'Интерес' },
-  { key: 'SOLD', title: 'Купили' },
-  { key: 'LOST', title: 'Отказ' },
+  { key: 'NEW', title: 'Лид' },
+  { key: 'CALL1', title: '1-й звонок' },
+  { key: 'OFFER', title: 'Звонок-КП' },
+  { key: 'DECISION', title: 'Решение' },
+  { key: 'INVOICE', title: 'Счёт' },
+  { key: 'BOOKED', title: 'Бронь' },
+  { key: 'CLIENT', title: 'Клиент' },
+  { key: 'BASE', title: 'База' },
 ];
 
 function fmtDate(iso: string) {
@@ -135,7 +138,7 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
                       {l.phone && <div className="cardPhone">{l.phone}</div>}
                       <div className="cardMeta">
                         <span className="badge">{l.niche}</span>
-                        {l.status === 'SOLD' && !l.churnedAt && (
+                        {l.status === 'CLIENT' && !l.churnedAt && (
                           <span className="badge green">${l.weeklyFee}/нед</span>
                         )}
                         {paid > 0 && <span className="badge green">✓ {money(paid)}</span>}
@@ -293,7 +296,7 @@ function LeadModal({
           ))}
         </div>
 
-        {lead.status === 'SOLD' && (
+        {lead.status === 'CLIENT' && (
           <div className="soldBox">
             <div className="soldRow">
               <span style={{ fontSize: 13, fontWeight: 700 }}>$</span>
@@ -317,11 +320,15 @@ function LeadModal({
             <div className="dim" style={{ fontSize: 12, marginTop: 8 }}>
               {lead.soldAt && `Платит с ${fmtDate(lead.soldAt)}`}
               {lead.churnedAt && ` · отвалился ${fmtDate(lead.churnedAt)}`}
+              {' · '}
+              <a href="/crm/clients" style={{ color: 'var(--green)' }}>
+                → карточка в «Клиентах»
+              </a>
             </div>
           </div>
         )}
 
-        {(lead.status === 'SOLD' || lead.payments.length > 0) && (
+        {(lead.status === 'CLIENT' || lead.payments.length > 0) && (
           <>
             <div className="fieldLabel">
               Оплаты {paidTotal > 0 && <span style={{ color: 'var(--green)' }}>· всего {money(paidTotal)}</span>}

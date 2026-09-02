@@ -1,4 +1,31 @@
-export type LeadStatus = 'NEW' | 'CONTACTED' | 'INTERESTED' | 'SOLD' | 'LOST';
+export type LeadStatus =
+  | 'NEW'      // Лид
+  | 'CALL1'    // Первый звонок
+  | 'OFFER'    // Звонок — коммерческое предложение
+  | 'DECISION' // Принимается решение
+  | 'INVOICE'  // Выставил счёт
+  | 'BOOKED'   // Бронь
+  | 'CLIENT'   // Клиент → уходит в таблицу клиентов
+  | 'BASE';    // База
+
+export type ClientDTO = {
+  id: string;
+  leadId: string;
+  project: string;
+  teamlead: string | null;
+  targetolog: string | null;
+  planAmount: number | null;
+  service: string | null;
+  launchAt: string | null;
+  nextPayAt: string | null;
+  payFormat: string | null;
+  payMethod: string | null;
+  status: string;
+  factAmount: number;      // сумма факт — из оплат лида
+  lastPayAt: string | null; // дата последней оплаты — из оплат лида
+  phone: string | null;
+  telegram: string | null;
+};
 
 export type QA = { question: string; answer: string };
 
