@@ -46,10 +46,13 @@ export function AnalyticsView({
   const [spends, setSpends] = useState(initialSpends);
   const [niche, setNiche] = useState<string>('ALL');
 
-  const niches = useMemo(
-    () => [...new Set([...leads.map((l) => l.niche), ...spends.map((s) => s.niche)])].sort(),
-    [leads, spends],
-  );
+  // ниша живёт, пока есть её лиды или ненулевой расход; пустую с обнулённым
+  // расходом из списка убираем — так нишу можно «удалить» без спецкнопки
+  const niches = useMemo(() => {
+    const set = new Set(leads.map((l) => l.niche));
+    for (const s of spends) if (s.amount > 0) set.add(s.niche);
+    return [...set].sort();
+  }, [leads, spends]);
 
   const nicheLeads = niche === 'ALL' ? leads : leads.filter((l) => l.niche === niche);
   const nicheSpends = niche === 'ALL' ? spends : spends.filter((s) => s.niche === niche);
