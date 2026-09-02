@@ -12,7 +12,11 @@ export default async function CrmPage() {
     return <div className="dim">База не подключена: задай DATABASE_URL в переменных окружения.</div>;
   }
 
-  const leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 1000 });
+  const leads = await prisma.lead.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 1000,
+    include: { payments: { orderBy: { paidAt: 'desc' } } },
+  });
   const dto: LeadDTO[] = leads.map((l) => ({
     id: l.id,
     name: l.name,
@@ -29,6 +33,13 @@ export default async function CrmPage() {
     soldAt: l.soldAt?.toISOString() ?? null,
     churnedAt: l.churnedAt?.toISOString() ?? null,
     createdAt: l.createdAt.toISOString(),
+    payments: l.payments.map((pm) => ({
+      id: pm.id,
+      amount: pm.amount,
+      method: pm.method,
+      screenshot: pm.screenshot,
+      paidAt: pm.paidAt.toISOString(),
+    })),
   }));
 
   return <Board initialLeads={dto} />;

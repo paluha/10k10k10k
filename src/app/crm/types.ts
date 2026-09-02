@@ -2,6 +2,14 @@ export type LeadStatus = 'NEW' | 'CONTACTED' | 'INTERESTED' | 'SOLD' | 'LOST';
 
 export type QA = { question: string; answer: string };
 
+export type PaymentDTO = {
+  id: string;
+  amount: number;
+  method: string | null;
+  screenshot: string | null; // data-url
+  paidAt: string;
+};
+
 export type LeadDTO = {
   id: string;
   name: string;
@@ -18,6 +26,7 @@ export type LeadDTO = {
   soldAt: string | null;
   churnedAt: string | null;
   createdAt: string;
+  payments: PaymentDTO[];
 };
 
 export type SpendDTO = {

@@ -39,11 +39,27 @@ model Lead {
   soldAt    DateTime?  // когда купил
   churnedAt DateTime?  // когда отвалился (null = платит до сих пор)
 
+  payments  Payment[]
+
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
   @@index([status, createdAt(sort: Desc)])
   @@index([niche, createdAt(sort: Desc)])
+}
+
+// Фактический платёж клиента (SOLD-лида): сумма, куда платил, скрин подтверждения
+model Payment {
+  id         String   @id @default(cuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  amount     Float
+  method     String?  // куда платил: zelle / карта / кэш / крипта ...
+  screenshot String?  @db.Text // data-url base64 скрина подтверждения
+  paidAt     DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([leadId, paidAt(sort: Desc)])
 }
 
 // Расход на рекламу: одна цифра на нишу в неделю, вводится руками

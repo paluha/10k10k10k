@@ -32,7 +32,17 @@ function money(n: number) {
   return `$${Math.round(n).toLocaleString('en-US')}`;
 }
 
-export function AnalyticsView({ leads, initialSpends }: { leads: LeadLite[]; initialSpends: SpendDTO[] }) {
+type PaymentLite = { amount: number; paidAt: string; niche: string };
+
+export function AnalyticsView({
+  leads,
+  initialSpends,
+  payments,
+}: {
+  leads: LeadLite[];
+  initialSpends: SpendDTO[];
+  payments: PaymentLite[];
+}) {
   const [spends, setSpends] = useState(initialSpends);
   const [niche, setNiche] = useState<string>('ALL');
 
@@ -84,6 +94,10 @@ export function AnalyticsView({ leads, initialSpends }: { leads: LeadLite[]; ini
   );
   const totalProfit = total.revenue - total.spent;
   const payingNow = nicheLeads.filter((l) => l.soldAt && !l.churnedAt).length;
+  const paidFact = (niche === 'ALL' ? payments : payments.filter((p) => p.niche === niche)).reduce(
+    (s, p) => s + p.amount,
+    0,
+  );
 
   const saveSpend = async (week: number, value: string) => {
     if (niche === 'ALL') return;
@@ -128,6 +142,10 @@ export function AnalyticsView({ leads, initialSpends }: { leads: LeadLite[]; ini
         <div className="statCard">
           <div className="statLabel">Профит</div>
           <div className={`statValue ${totalProfit >= 0 ? 'green' : 'red'}`}>{money(totalProfit)}</div>
+        </div>
+        <div className="statCard">
+          <div className="statLabel">Оплачено (факт)</div>
+          <div className="statValue green">{money(paidFact)}</div>
         </div>
         <div className="statCard">
           <div className="statLabel">Платят сейчас</div>
