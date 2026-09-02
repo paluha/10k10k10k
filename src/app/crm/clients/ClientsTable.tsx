@@ -40,8 +40,7 @@ export function ClientsTable({ initialClients }: { initialClients: ClientDTO[] }
                 ...updated,
                 launchAt: updated.launchAt ?? null,
                 nextPayAt: updated.nextPayAt ?? null,
-                // факт/оплаты приходят не из client-патча — сохраняем свои
-                factAmount: c.factAmount,
+                // журнал оплат и контакты приходят не из client-патча — сохраняем свои
                 lastPayAt: c.lastPayAt,
                 phone: c.phone,
                 telegram: c.telegram,
@@ -60,7 +59,7 @@ export function ClientsTable({ initialClients }: { initialClients: ClientDTO[] }
 
   const overdue = clients.filter(isOverdue);
   const totPlan = clients.reduce((s, c) => s + (c.planAmount ?? 0), 0);
-  const totFact = clients.reduce((s, c) => s + c.factAmount, 0);
+  const totFact = clients.reduce((s, c) => s + (c.factAmount ?? 0), 0);
 
   return (
     <>
@@ -132,8 +131,14 @@ export function ClientsTable({ initialClients }: { initialClients: ClientDTO[] }
                     onBlur={(e) => patch(c.id, { planAmount: e.target.value === '' ? null : Number(e.target.value) })}
                   />
                 </td>
-                <td className="factCell" title={c.lastPayAt ? `последняя оплата ${fmtD(c.lastPayAt)}` : 'оплат нет — вносятся в карточке лида на доске'}>
-                  {c.factAmount > 0 ? money(c.factAmount) : <span className="dim">—</span>}
+                <td>
+                  <input
+                    className="cellInput cellNum factInput"
+                    type="number"
+                    defaultValue={c.factAmount ?? ''}
+                    placeholder="0"
+                    onBlur={(e) => patch(c.id, { factAmount: e.target.value === '' ? null : Number(e.target.value) })}
+                  />
                 </td>
                 <td>
                   <input
@@ -218,8 +223,8 @@ export function ClientsTable({ initialClients }: { initialClients: ClientDTO[] }
         </table>
       </div>
       <div className="dim" style={{ fontSize: 11.5, marginTop: 8 }}>
-        «Факт $» и «Оплата» считаются сами из оплат, внесённых в карточке лида на доске (со скринами).
-        «След. оплата» — для напоминалок: просроченные подсвечиваются и приходят в телеграм.
+        «Оплата» — дата последнего платежа со скрином из карточки лида. «След. оплата» — для
+        напоминалок: просроченные подсвечиваются и приходят в телеграм.
       </div>
     </>
   );

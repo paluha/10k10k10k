@@ -186,7 +186,7 @@
 .cellDate { min-width: 118px; color-scheme: dark; }
 .cellSel { appearance: auto; cursor: pointer; }
 .cellSel option { background: var(--bg-card); color: var(--text); }
-.factCell { font-weight: 800; color: var(--green); }
+.factInput { font-weight: 800; color: var(--green); }
 .overdueRow td { background: rgba(255, 68, 68, 0.07); }
 .overdueBanner {
   background: rgba(255, 68, 68, 0.12); border: 1px solid rgba(255, 68, 68, 0.4);

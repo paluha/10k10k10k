@@ -21,8 +21,8 @@ export type ClientDTO = {
   payFormat: string | null;
   payMethod: string | null;
   status: string;
-  factAmount: number;      // сумма факт — из оплат лида
-  lastPayAt: string | null; // дата последней оплаты — из оплат лида
+  factAmount: number | null; // сумма факт — вводится руками
+  lastPayAt: string | null;  // дата последней оплаты — из оплат лида (журнал скринов)
   phone: string | null;
   telegram: string | null;
 };

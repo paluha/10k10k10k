@@ -33,6 +33,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (typeof body.status === 'string' && body.status.trim()) data.status = body.status.trim();
   if (body.planAmount === null) data.planAmount = null;
   if (typeof body.planAmount === 'number' && body.planAmount >= 0) data.planAmount = body.planAmount;
+  if (body.factAmount === null) data.factAmount = null;
+  if (typeof body.factAmount === 'number' && body.factAmount >= 0) data.factAmount = body.factAmount;
   for (const f of ['launchAt', 'nextPayAt'] as const) {
     const v = dateOrNull(body[f]);
     if (v !== undefined) data[f] = v;

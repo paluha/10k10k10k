@@ -55,6 +55,7 @@ model Client {
   teamlead   String?             // тимлид
   targetolog String?             // таргетолог — кто ведёт проект
   planAmount Float?              // сумма план, $
+  factAmount Float?              // сумма факт, $ — вводится руками
   service    String?             // услуга, на какую закрыли
   launchAt   DateTime?           // дата запуска
   nextPayAt  DateTime?           // дата следующей оплаты (для напоминалок)

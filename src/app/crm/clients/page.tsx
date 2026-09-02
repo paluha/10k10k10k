@@ -38,7 +38,7 @@ export default async function ClientsPage() {
     payFormat: c.payFormat,
     payMethod: c.payMethod,
     status: c.status,
-    factAmount: c.lead.payments.reduce((s, p) => s + p.amount, 0),
+    factAmount: c.factAmount,
     lastPayAt: c.lead.payments[0]?.paidAt.toISOString() ?? null,
     phone: c.lead.phone,
     telegram: c.lead.telegram,
