@@ -23,6 +23,8 @@
   padding: 6px 14px; font-size: 13px; font-weight: 600;
 }
 .chip.active { border-color: var(--green); color: var(--green); background: var(--green-glow); }
+.chip.addChip { border-style: dashed; color: var(--green); border-color: rgba(0, 210, 106, 0.4); }
+.chip.addChip:hover { background: var(--green-glow); border-color: var(--green); }
 
 /* доска */
 .board { display: flex; gap: 12px; overflow-x: auto; align-items: flex-start; padding-bottom: 8px; }

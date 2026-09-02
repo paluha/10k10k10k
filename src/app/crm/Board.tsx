@@ -22,6 +22,7 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
   const [leads, setLeads] = useState(initialLeads);
   const [niche, setNiche] = useState<string>('ALL');
   const [openId, setOpenId] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
 
   const niches = useMemo(() => [...new Set(leads.map((l) => l.niche))].sort(), [leads]);
   const visible = niche === 'ALL' ? leads : leads.filter((l) => l.niche === niche);
@@ -76,6 +77,9 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
             {n} ({leads.filter((l) => l.niche === n).length})
           </button>
         ))}
+        <button className="chip addChip" onClick={() => setAdding(true)}>
+          + Лид
+        </button>
       </div>
 
       <div className="board">
@@ -124,7 +128,84 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
           onDelete={() => remove(open.id)}
         />
       )}
+
+      {adding && (
+        <AddLeadModal
+          defaultNiche={niche !== 'ALL' ? niche : ''}
+          onClose={() => setAdding(false)}
+          onCreated={(l) => {
+            setLeads((prev) => [l, ...prev]);
+            setAdding(false);
+          }}
+        />
+      )}
     </>
+  );
+}
+
+function AddLeadModal({
+  defaultNiche,
+  onClose,
+  onCreated,
+}: {
+  defaultNiche: string;
+  onClose: () => void;
+  onCreated: (l: LeadDTO) => void;
+}) {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [nicheVal, setNicheVal] = useState(defaultNiche);
+  const [note, setNote] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const res = await fetch('/api/crm/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, telegram, niche: nicheVal, note }),
+    }).catch(() => null);
+    if (res?.ok) {
+      onCreated(await res.json());
+    } else {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modalHead">
+          <div className="modalName">Новый лид</div>
+          <button className="modalClose" onClick={onClose}>
+            ×
+          </button>
+        </div>
+
+        <div className="fieldLabel">Имя *</div>
+        <input className="modalInput" autoFocus value={name} onChange={(e) => setName(e.target.value)} />
+
+        <div className="fieldLabel">Телефон</div>
+        <input className="modalInput" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
+
+        <div className="fieldLabel">Telegram</div>
+        <input className="modalInput" value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="@username" />
+
+        <div className="fieldLabel">Ниша</div>
+        <input className="modalInput" value={nicheVal} onChange={(e) => setNicheVal(e.target.value)} placeholder="no-campaign" />
+
+        <div className="fieldLabel">Заметка</div>
+        <textarea className="modalTextarea" value={note} onChange={(e) => setNote(e.target.value)} />
+
+        <div className="modalActions">
+          <span />
+          <button className="saveBtn" disabled={!name.trim() || saving} onClick={save}>
+            {saving ? '...' : 'Добавить'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
