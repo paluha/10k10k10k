@@ -94,9 +94,10 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
               onDrop={(e) => {
                 e.preventDefault();
                 setOverCol(null);
-                if (dragId) {
-                  const l = leads.find((x) => x.id === dragId);
-                  if (l && l.status !== col.key) patch(dragId, { status: col.key });
+                const id = e.dataTransfer.getData('text/plain') || dragId;
+                if (id) {
+                  const l = leads.find((x) => x.id === id);
+                  if (l && l.status !== col.key) patch(id, { status: col.key });
                 }
               }}
             >
@@ -112,8 +113,10 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
                     draggable
                     onDragStart={(e) => {
                       justDragged = true;
-                      setDragId(l.id);
+                      // setData обязателен: Firefox без него вообще не стартует драг
+                      e.dataTransfer.setData('text/plain', l.id);
                       e.dataTransfer.effectAllowed = 'move';
+                      setDragId(l.id);
                     }}
                     onDragEnd={() => {
                       setDragId(null);
