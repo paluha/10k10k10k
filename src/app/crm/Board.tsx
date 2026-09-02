@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { LeadDTO, LeadStatus } from './types';
 
 const COLUMNS: { key: LeadStatus; title: string }[] = [
@@ -18,14 +18,16 @@ function fmtDate(iso: string) {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
 
+// клик открывает попап; после перетаскивания — не открывать (как у vodily)
+let justDragged = false;
+
 export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
   const [leads, setLeads] = useState(initialLeads);
-  const [niche, setNiche] = useState<string>('ALL');
   const [openId, setOpenId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [overCol, setOverCol] = useState<LeadStatus | null>(null);
 
-  const niches = useMemo(() => [...new Set(leads.map((l) => l.niche))].sort(), [leads]);
-  const visible = niche === 'ALL' ? leads : leads.filter((l) => l.niche === niche);
   const open = openId ? leads.find((l) => l.id === openId) ?? null : null;
 
   const patch = async (id: string, body: Record<string, unknown>) => {
@@ -69,31 +71,65 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
   return (
     <>
       <div className="chips">
-        <button className={`chip ${niche === 'ALL' ? 'active' : ''}`} onClick={() => setNiche('ALL')}>
-          Все ({leads.length})
-        </button>
-        {niches.map((n) => (
-          <button key={n} className={`chip ${niche === n ? 'active' : ''}`} onClick={() => setNiche(n)}>
-            {n} ({leads.filter((l) => l.niche === n).length})
-          </button>
-        ))}
         <button className="chip addChip" onClick={() => setAdding(true)}>
           + Лид
         </button>
+        <span className="boardCount">{leads.length} лидов</span>
       </div>
 
       <div className="board">
         {COLUMNS.map((col) => {
-          const cards = visible.filter((l) => l.status === col.key);
+          const cards = leads.filter((l) => l.status === col.key);
           return (
-            <div className="col" key={col.key}>
+            <div
+              className={`col ${overCol === col.key ? 'dragOver' : ''}`}
+              key={col.key}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setOverCol(col.key);
+              }}
+              onDragLeave={(e) => {
+                if (e.currentTarget === e.target) setOverCol(null);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setOverCol(null);
+                if (dragId) {
+                  const l = leads.find((x) => x.id === dragId);
+                  if (l && l.status !== col.key) patch(dragId, { status: col.key });
+                }
+              }}
+            >
               <div className="colHead">
                 <span>{col.title}</span>
                 <span className="colCount">{cards.length}</span>
               </div>
               <div className="colCards">
                 {cards.map((l) => (
-                  <div className="card" key={l.id} onClick={() => setOpenId(l.id)}>
+                  <div
+                    className="card"
+                    key={l.id}
+                    draggable
+                    onDragStart={(e) => {
+                      justDragged = true;
+                      setDragId(l.id);
+                      e.dataTransfer.effectAllowed = 'move';
+                    }}
+                    onDragEnd={() => {
+                      setDragId(null);
+                      // сбросить флаг после клика, который браузер шлёт следом за drop
+                      setTimeout(() => {
+                        justDragged = false;
+                      }, 0);
+                    }}
+                    onClick={() => {
+                      if (justDragged) {
+                        justDragged = false;
+                        return;
+                      }
+                      setOpenId(l.id);
+                    }}
+                  >
                     <div className="cardName">{l.name}</div>
                     {l.phone && <div className="cardPhone">{l.phone}</div>}
                     <div className="cardMeta">
@@ -131,7 +167,7 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
 
       {adding && (
         <AddLeadModal
-          defaultNiche={niche !== 'ALL' ? niche : ''}
+          defaultNiche=""
           onClose={() => setAdding(false)}
           onCreated={(l) => {
             setLeads((prev) => [l, ...prev]);

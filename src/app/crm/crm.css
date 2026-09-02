@@ -37,11 +37,17 @@
 .colCount { background: var(--bg-card); border-radius: 999px; padding: 2px 9px; font-size: 12px; }
 .colCards { display: flex; flex-direction: column; gap: 8px; }
 
+.boardCount { font-size: 13px; color: var(--text-dim); align-self: center; }
+
+.col.dragOver { outline: 1.5px dashed var(--green); outline-offset: 5px; border-radius: 10px; }
+.col.dragOver .colCards { min-height: 40px; }
+
 .card {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 12px; cursor: pointer;
+  border-radius: var(--radius-sm); padding: 12px; cursor: grab;
   transition: border-color 0.15s, background 0.15s;
 }
+.card:active { cursor: grabbing; }
 .card:hover { background: var(--bg-card-hover); border-color: rgba(255, 255, 255, 0.2); }
 .cardName { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
 .cardPhone { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
