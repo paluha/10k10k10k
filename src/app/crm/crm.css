@@ -55,6 +55,7 @@
 }
 .badge.green { background: var(--green-glow); color: var(--green); }
 .badge.red { background: rgba(255, 68, 68, 0.12); color: var(--red); }
+.badge.blue { background: rgba(59, 130, 246, 0.14); color: #60a5fa; }
 /* дропдаун статуса на карточке */
 .statusSel {
   width: 100%; margin-top: 7px;
@@ -94,7 +95,12 @@
   width: 100%; background: var(--bg-option); border: 1px solid var(--border);
   border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 14px;
 }
-.modalTextarea { min-height: 70px; resize: vertical; }
+.modalTextarea { min-height: 160px; resize: vertical; }
+.qaEditRow { display: grid; grid-template-columns: 1fr 1.1fr; gap: 6px; }
+.qaQIn { font-size: 12.5px; color: var(--text-muted); }
+.twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.remindRow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.remindRow .modalInput { width: auto; color-scheme: dark; }
 .statusRow { display: flex; gap: 6px; flex-wrap: wrap; }
 .statusBtn {
   background: var(--bg-option); color: var(--text-muted); border: 1px solid transparent;

@@ -19,6 +19,19 @@ function fmtDate(iso: string) {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
 
+function fmtDT(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+// ISO → значение для <input type="datetime-local"> в локальном времени
+function toLocalInput(iso: string | null) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
 function money(n: number) {
   return `$${Math.round(n).toLocaleString('en-US')}`;
 }
@@ -51,6 +64,11 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
   const [adding, setAdding] = useState(false);
 
   const open = openId ? leads.find((l) => l.id === openId) ?? null : null;
+  const endOfToday = (() => {
+    const d = new Date();
+    d.setHours(23, 59, 59, 999);
+    return d.getTime();
+  })();
 
   const patch = async (id: string, body: Record<string, unknown>) => {
     const res = await fetch(`/api/crm/leads/${id}`, {
@@ -144,6 +162,15 @@ export function Board({ initialLeads }: { initialLeads: LeadDTO[] }) {
                         {paid > 0 && <span className="badge green">✓ {money(paid)}</span>}
                         {l.churnedAt && <span className="badge red">отвалился</span>}
                         <span className="badge">{fmtDate(l.createdAt)}</span>
+                        {l.remindAt && (
+                          <span
+                            className={`badge ${new Date(l.remindAt).getTime() <= endOfToday ? 'red' : 'blue'}`}
+                            title={l.remindText ?? ''}
+                          >
+                            ⏰ {fmtDT(l.remindAt)}
+                            {l.remindText ? ` ${l.remindText}` : ''}
+                          </span>
+                        )}
                       </div>
                       <select
                         className="statusSel"
@@ -208,6 +235,15 @@ function LeadModal({
   const [note, setNote] = useState(lead.note ?? '');
   const [nicheVal, setNicheVal] = useState(lead.niche);
   const [fee, setFee] = useState(String(lead.weeklyFee));
+  const [nameVal, setNameVal] = useState(lead.name);
+  const [phoneVal, setPhoneVal] = useState(lead.phone ?? '');
+  const [qa, setQa] = useState<{ question: string; answer: string }[]>(() => {
+    const base = (lead.answers ?? []).map((a) => ({ question: a.question ?? '', answer: a.answer ?? '' }));
+    while (base.length < 3) base.push({ question: '', answer: '' });
+    return base;
+  });
+  const [remindAtVal, setRemindAtVal] = useState(toLocalInput(lead.remindAt));
+  const [remindTextVal, setRemindTextVal] = useState(lead.remindText ?? '');
   const [saving, setSaving] = useState(false);
   const [shot, setShot] = useState<string | null>(null); // просмотр скрина
 
@@ -217,12 +253,35 @@ function LeadModal({
   const [payShot, setPayShot] = useState<string | null>(null);
   const [payBusy, setPayBusy] = useState(false);
 
+  const qaOrig = JSON.stringify(
+    (() => {
+      const base = (lead.answers ?? []).map((a) => ({ question: a.question ?? '', answer: a.answer ?? '' }));
+      while (base.length < 3) base.push({ question: '', answer: '' });
+      return base;
+    })(),
+  );
   const dirty =
-    note !== (lead.note ?? '') || nicheVal !== lead.niche || Number(fee) !== lead.weeklyFee;
+    note !== (lead.note ?? '') ||
+    nicheVal !== lead.niche ||
+    Number(fee) !== lead.weeklyFee ||
+    nameVal !== lead.name ||
+    phoneVal !== (lead.phone ?? '') ||
+    JSON.stringify(qa) !== qaOrig ||
+    remindAtVal !== toLocalInput(lead.remindAt) ||
+    remindTextVal !== (lead.remindText ?? '');
 
   const save = async () => {
     setSaving(true);
-    await onPatch({ note, niche: nicheVal, weeklyFee: Number(fee) || 0 });
+    await onPatch({
+      note,
+      niche: nicheVal,
+      weeklyFee: Number(fee) || 0,
+      name: nameVal,
+      phone: phoneVal,
+      answers: qa,
+      remindAt: remindAtVal ? new Date(remindAtVal).toISOString() : null,
+      remindText: remindTextVal,
+    });
     setSaving(false);
   };
 
@@ -272,16 +331,29 @@ function LeadModal({
           )}
         </div>
 
-        {lead.answers && lead.answers.length > 0 && (
-          <div className="qaList">
-            {lead.answers.map((qa, i) => (
-              <div className="qa" key={i}>
-                <div className="qaQ">{qa.question}</div>
-                <div className="qaA">{qa.answer}</div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="fieldLabel">Анкета (вопрос → ответ)</div>
+        <div className="qaList">
+          {qa.map((pair, i) => (
+            <div className="qaEditRow" key={i}>
+              <input
+                className="modalInput qaQIn"
+                placeholder={`Вопрос ${i + 1}`}
+                value={pair.question}
+                onChange={(e) =>
+                  setQa((prev) => prev.map((p, j) => (j === i ? { ...p, question: e.target.value } : p)))
+                }
+              />
+              <input
+                className="modalInput"
+                placeholder="Ответ"
+                value={pair.answer}
+                onChange={(e) =>
+                  setQa((prev) => prev.map((p, j) => (j === i ? { ...p, answer: e.target.value } : p)))
+                }
+              />
+            </div>
+          ))}
+        </div>
 
         <div className="fieldLabel">Статус</div>
         <div className="statusRow">
@@ -294,6 +366,35 @@ function LeadModal({
               {c.title}
             </button>
           ))}
+        </div>
+
+        <div className="fieldLabel">⏰ Напоминание</div>
+        <div className="remindRow">
+          <input
+            className="modalInput"
+            type="datetime-local"
+            value={remindAtVal}
+            onChange={(e) => setRemindAtVal(e.target.value)}
+          />
+          <input
+            className="modalInput"
+            placeholder="звонок КП, кол..."
+            value={remindTextVal}
+            onChange={(e) => setRemindTextVal(e.target.value)}
+            style={{ flex: 1, minWidth: 120 }}
+          />
+          {(remindAtVal || lead.remindAt) && (
+            <button
+              className="unchurnBtn"
+              title="убрать напоминание"
+              onClick={() => {
+                setRemindAtVal('');
+                setRemindTextVal('');
+              }}
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {lead.status === 'CLIENT' && (
@@ -398,10 +499,21 @@ function LeadModal({
           </>
         )}
 
+        <div className="twoCol">
+          <div>
+            <div className="fieldLabel">Имя</div>
+            <input className="modalInput" value={nameVal} onChange={(e) => setNameVal(e.target.value)} />
+          </div>
+          <div>
+            <div className="fieldLabel">Телефон</div>
+            <input className="modalInput" value={phoneVal} onChange={(e) => setPhoneVal(e.target.value)} placeholder="+1..." />
+          </div>
+        </div>
+
         <div className="fieldLabel">Ниша</div>
         <input className="modalInput" value={nicheVal} onChange={(e) => setNicheVal(e.target.value)} />
 
-        <div className="fieldLabel">Заметка</div>
+        <div className="fieldLabel">Заметка (о чём договорились)</div>
         <textarea
           className="modalTextarea"
           value={note}
@@ -438,9 +550,13 @@ function AddLeadModal({
 }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [telegram, setTelegram] = useState('');
   const [nicheVal, setNicheVal] = useState('');
   const [note, setNote] = useState('');
+  const [qa, setQa] = useState<{ question: string; answer: string }[]>([
+    { question: '', answer: '' },
+    { question: '', answer: '' },
+    { question: '', answer: '' },
+  ]);
   const [saving, setSaving] = useState(false);
 
   const save = async () => {
@@ -448,7 +564,7 @@ function AddLeadModal({
     const res = await fetch('/api/crm/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, telegram, niche: nicheVal, note }),
+      body: JSON.stringify({ name, phone, niche: nicheVal, note, answers: qa }),
     }).catch(() => null);
     if (res?.ok) {
       onCreated(await res.json());
@@ -473,8 +589,29 @@ function AddLeadModal({
         <div className="fieldLabel">Телефон</div>
         <input className="modalInput" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
 
-        <div className="fieldLabel">Telegram</div>
-        <input className="modalInput" value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="@username" />
+        <div className="fieldLabel">Анкета (вопрос → ответ)</div>
+        <div className="qaList">
+          {qa.map((pair, i) => (
+            <div className="qaEditRow" key={i}>
+              <input
+                className="modalInput qaQIn"
+                placeholder={`Вопрос ${i + 1}`}
+                value={pair.question}
+                onChange={(e) =>
+                  setQa((prev) => prev.map((p, j) => (j === i ? { ...p, question: e.target.value } : p)))
+                }
+              />
+              <input
+                className="modalInput"
+                placeholder="Ответ"
+                value={pair.answer}
+                onChange={(e) =>
+                  setQa((prev) => prev.map((p, j) => (j === i ? { ...p, answer: e.target.value } : p)))
+                }
+              />
+            </div>
+          ))}
+        </div>
 
         <div className="fieldLabel">Ниша</div>
         <input className="modalInput" value={nicheVal} onChange={(e) => setNicheVal(e.target.value)} placeholder="no-campaign" />

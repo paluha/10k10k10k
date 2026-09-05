@@ -32,6 +32,8 @@ export default async function CrmPage() {
     weeklyFee: l.weeklyFee,
     soldAt: l.soldAt?.toISOString() ?? null,
     churnedAt: l.churnedAt?.toISOString() ?? null,
+    remindAt: l.remindAt?.toISOString() ?? null,
+    remindText: l.remindText,
     createdAt: l.createdAt.toISOString(),
     payments: l.payments.map((pm) => ({
       id: pm.id,

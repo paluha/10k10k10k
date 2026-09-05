@@ -28,6 +28,25 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
   if (typeof body.note === 'string') data.note = body.note;
   if (typeof body.niche === 'string' && body.niche.trim()) data.niche = body.niche.trim();
+  if (typeof body.name === 'string' && body.name.trim()) data.name = body.name.trim();
+  if (typeof body.phone === 'string') data.phone = body.phone.trim() || null;
+  if (typeof body.telegram === 'string') data.telegram = body.telegram.trim() || null;
+  if (Array.isArray(body.answers)) {
+    data.answers = body.answers
+      .filter(
+        (a: unknown): a is { question: string; answer: string } =>
+          !!a && typeof (a as { question?: unknown }).question === 'string' && typeof (a as { answer?: unknown }).answer === 'string',
+      )
+      .map((a: { question: string; answer: string }) => ({ question: a.question.trim(), answer: a.answer.trim() }))
+      .filter((a: { question: string; answer: string }) => a.question || a.answer)
+      .slice(0, 10);
+  }
+  if (body.remindAt === null) { data.remindAt = null; data.remindText = null; }
+  if (typeof body.remindAt === 'string') {
+    const d = new Date(body.remindAt);
+    if (!isNaN(d.getTime())) data.remindAt = d;
+  }
+  if (typeof body.remindText === 'string') data.remindText = body.remindText.trim() || null;
   if (typeof body.weeklyFee === 'number' && body.weeklyFee >= 0) data.weeklyFee = Math.round(body.weeklyFee);
   if (body.churned === true) data.churnedAt = new Date();
   if (body.churned === false) data.churnedAt = null;

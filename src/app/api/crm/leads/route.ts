@@ -13,6 +13,17 @@ export async function POST(request: Request) {
   const name = typeof body.name === 'string' ? body.name.trim() : '';
   if (!name) return NextResponse.json({ error: 'name required' }, { status: 400 });
 
+  const answers = Array.isArray(body.answers)
+    ? body.answers
+        .filter(
+          (a: unknown): a is { question: string; answer: string } =>
+            !!a && typeof (a as { question?: unknown }).question === 'string' && typeof (a as { answer?: unknown }).answer === 'string',
+        )
+        .map((a: { question: string; answer: string }) => ({ question: a.question.trim(), answer: a.answer.trim() }))
+        .filter((a: { question: string; answer: string }) => a.question || a.answer)
+        .slice(0, 10)
+    : [];
+
   const lead = await prisma.lead.create({
     data: {
       name,
@@ -20,6 +31,7 @@ export async function POST(request: Request) {
       telegram: typeof body.telegram === 'string' && body.telegram.trim() ? body.telegram.trim() : null,
       niche: typeof body.niche === 'string' && body.niche.trim() ? body.niche.trim() : 'no-campaign',
       note: typeof body.note === 'string' && body.note.trim() ? body.note.trim() : null,
+      answers: answers.length ? answers : undefined,
       lang: 'ru',
       source: 'manual',
     },

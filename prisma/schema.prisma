@@ -29,6 +29,10 @@ model Lead {
   status    String     @default("NEW")
   note      String?    @db.Text
 
+  // Напоминание по лиду: «завтра 17:00 — звонок КП». Уходит в утреннюю телеграм-сводку.
+  remindAt   DateTime?
+  remindText String?
+
   // Экономика: SOLD-лид = клиент, платит weeklyFee в неделю
   weeklyFee Int        @default(150)
   soldAt    DateTime?  // когда купил

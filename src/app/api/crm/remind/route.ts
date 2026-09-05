@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   if (!prisma) return NextResponse.json({ error: 'no db' }, { status: 500 });
 
   const now = Date.now();
-  const [clients, leads] = await Promise.all([
+  const [clients, leads, reminders] = await Promise.all([
     prisma.client.findMany({
       where: { nextPayAt: { not: null }, status: { not: 'закрыт' } },
       select: { project: true, nextPayAt: true, payFormat: true },
@@ -28,6 +28,11 @@ export async function GET(request: Request) {
     prisma.lead.findMany({
       where: { status: { in: Object.keys(STAGE_RU) } },
       select: { name: true, status: true, updatedAt: true },
+    }),
+    prisma.lead.findMany({
+      where: { remindAt: { not: null, lte: new Date(now + DAY) } },
+      orderBy: { remindAt: 'asc' },
+      select: { name: true, remindAt: true, remindText: true },
     }),
   ]);
 
@@ -51,7 +56,17 @@ export async function GET(request: Request) {
     (l) => ['DECISION', 'INVOICE', 'BOOKED'].includes(l.status) && now - l.updatedAt.getTime() > 2 * DAY,
   );
 
+  // запланированные звонки/задачи по лидам: просроченные и ближайшие сутки.
+  // Время показываем по Киеву и по US Eastern — команда в двух поясах.
+  const fmtT = (d: Date, tz: string) =>
+    d.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: tz });
+  const plans = reminders.map((l) => {
+    const overdue = l.remindAt!.getTime() < now ? ' ⚠️ просрочено' : '';
+    return `• ${l.name}${l.remindText ? ` — ${l.remindText}` : ''}: ${fmtT(l.remindAt!, 'Europe/Kyiv')} Киев / ${fmtT(l.remindAt!, 'America/New_York')} US${overdue}`;
+  });
+
   const lines: string[] = [];
+  if (plans.length) lines.push(`📅 *Запланировано:*`, ...plans, '');
   if (payDue.length) lines.push(`💰 *Оплаты:*`, ...payDue, '');
   if (staleHot.length) {
     lines.push(

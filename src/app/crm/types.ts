@@ -52,6 +52,8 @@ export type LeadDTO = {
   weeklyFee: number;
   soldAt: string | null;
   churnedAt: string | null;
+  remindAt: string | null;
+  remindText: string | null;
   createdAt: string;
   payments: PaymentDTO[];
 };
